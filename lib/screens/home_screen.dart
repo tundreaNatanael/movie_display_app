@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import '../models/movie.dart';
 import '../widgets/movie_card.dart';
 import 'detail_screen.dart';
@@ -15,49 +13,20 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<Movie> _movies = [];
   bool _isLoading = true;
-  String? _errorMessage;
-
-  static const String _apiKey = '8d7d8928d2bc5c7c7c8c44d6f8f8a5e0';
-  static const String _baseUrl = 'https://api.themoviedb.org/3/movie/popular';
 
   @override
   void initState() {
     super.initState();
-    _fetchMovies();
+    _loadMovies();
   }
 
-  Future<void> _fetchMovies() async {
-    // Fetch popular movies; fall back to local data on errors/timeouts.
+  void _loadMovies() {
     setState(() {
       _isLoading = true;
-      _errorMessage = null;
     });
-
-    try {
-      final response = await http
-          .get(Uri.parse('$_baseUrl?api_key=$_apiKey'))
-          .timeout(const Duration(seconds: 10));
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final List<dynamic> results = data['results'] ?? [];
-        setState(() {
-          _movies = results.map((json) => Movie.fromJson(json)).toList();
-          _isLoading = false;
-        });
-      } else {
-        _loadHardcodedMovies('API returned status ${response.statusCode}');
-      }
-    } catch (e) {
-      _loadHardcodedMovies('Failed to fetch movies: $e');
-    }
-  }
-
-  void _loadHardcodedMovies(String reason) {
     setState(() {
       _movies = Movie.getHardcodedMovies();
       _isLoading = false;
-      _errorMessage = 'Using offline data. $reason';
     });
   }
 
@@ -93,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: _fetchMovies,
+            onPressed: _loadMovies,
             tooltip: 'Refresh',
           ),
         ],
@@ -124,36 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
 
-    return Column(
-      children: [
-        if (_errorMessage != null)
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(12),
-            color: Colors.orange.withValues(alpha: 0.2),
-            child: Row(
-              children: [
-                const Icon(Icons.info_outline, color: Colors.orange, size: 20),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    _errorMessage!,
-                    style: const TextStyle(
-                      color: Colors.orange,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        Expanded(
-          child: _movies.isEmpty
-              ? _buildEmptyState()
-              : _buildMovieGrid(),
-        ),
-      ],
-    );
+    return _movies.isEmpty ? _buildEmptyState() : _buildMovieGrid();
   }
 
   Widget _buildEmptyState() {
@@ -176,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
-            onPressed: _fetchMovies,
+            onPressed: _loadMovies,
             icon: const Icon(Icons.refresh),
             label: const Text('Try Again'),
             style: ElevatedButton.styleFrom(

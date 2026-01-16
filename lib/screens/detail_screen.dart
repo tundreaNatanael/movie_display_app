@@ -55,9 +55,8 @@ class DetailScreen extends StatelessWidget {
   }
 
   Widget _buildBackdropImage() {
-    final imagePath = movie.fullBackdropPath.isNotEmpty
-        ? movie.fullBackdropPath
-        : movie.fullPosterPath;
+    final imagePath =
+        movie.backdropPath.isNotEmpty ? movie.backdropPath : movie.posterPath;
 
     if (imagePath.isEmpty) {
       return Container(
@@ -72,18 +71,9 @@ class DetailScreen extends StatelessWidget {
       );
     }
 
-    return Image.network(
+    return Image.asset(
       imagePath,
       fit: BoxFit.cover,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) return child;
-        return Container(
-          color: Colors.grey[800],
-          child: const Center(
-            child: CircularProgressIndicator(color: Colors.amber),
-          ),
-        );
-      },
       errorBuilder: (context, error, stackTrace) {
         return Container(
           color: Colors.grey[800],
@@ -148,7 +138,7 @@ class DetailScreen extends StatelessWidget {
             ],
           ),
         ),
-        if (movie.fullPosterPath.isNotEmpty)
+        if (movie.posterPath.isNotEmpty)
           Container(
             width: 80,
             height: 120,
@@ -164,8 +154,8 @@ class DetailScreen extends StatelessWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                movie.fullPosterPath,
+              child: Image.asset(
+                movie.posterPath,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(

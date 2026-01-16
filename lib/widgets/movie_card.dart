@@ -46,22 +46,10 @@ class MovieCard extends StatelessWidget {
   Widget _buildPosterImage() {
     return Container(
       color: Colors.grey[800],
-      child: movie.fullPosterPath.isNotEmpty
-          ? Image.network(
-              movie.fullPosterPath,
+      child: movie.posterPath.isNotEmpty
+          ? Image.asset(
+              movie.posterPath,
               fit: BoxFit.cover,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Center(
-                  child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                              loadingProgress.expectedTotalBytes!
-                        : null,
-                    color: Colors.amber,
-                  ),
-                );
-              },
               errorBuilder: (context, error, stackTrace) {
                 return const Center(
                   child: Icon(Icons.movie, size: 50, color: Colors.grey),

@@ -4,10 +4,7 @@ import '../models/movie.dart';
 class DetailScreen extends StatelessWidget {
   final Movie movie;
 
-  const DetailScreen({
-    super.key,
-    required this.movie,
-  });
+  const DetailScreen({super.key, required this.movie});
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +13,7 @@ class DetailScreen extends StatelessWidget {
       body: CustomScrollView(
         slivers: [
           _buildSliverAppBar(context),
-          SliverToBoxAdapter(
-            child: _buildMovieDetails(),
-          ),
+          SliverToBoxAdapter(child: _buildMovieDetails()),
         ],
       ),
     );
@@ -55,18 +50,15 @@ class DetailScreen extends StatelessWidget {
   }
 
   Widget _buildBackdropImage() {
-    final imagePath =
-        movie.backdropPath.isNotEmpty ? movie.backdropPath : movie.posterPath;
+    final imagePath = movie.backdropPath.isNotEmpty
+        ? movie.backdropPath
+        : movie.posterPath;
 
     if (imagePath.isEmpty) {
       return Container(
         color: Colors.grey[800],
         child: const Center(
-          child: Icon(
-            Icons.movie,
-            size: 80,
-            color: Colors.grey,
-          ),
+          child: Icon(Icons.movie, size: 80, color: Colors.grey),
         ),
       );
     }
@@ -78,11 +70,7 @@ class DetailScreen extends StatelessWidget {
         return Container(
           color: Colors.grey[800],
           child: const Center(
-            child: Icon(
-              Icons.broken_image,
-              size: 80,
-              color: Colors.grey,
-            ),
+            child: Icon(Icons.broken_image, size: 80, color: Colors.grey),
           ),
         );
       },
@@ -129,10 +117,7 @@ class DetailScreen extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 4),
                   child: Text(
                     movie.year,
-                    style: TextStyle(
-                      color: Colors.grey[400],
-                      fontSize: 16,
-                    ),
+                    style: TextStyle(color: Colors.grey[400], fontSize: 16),
                   ),
                 ),
             ],
@@ -196,10 +181,7 @@ class DetailScreen extends StatelessWidget {
                   ),
                   Text(
                     ' / 10',
-                    style: TextStyle(
-                      color: Colors.grey[400],
-                      fontSize: 16,
-                    ),
+                    style: TextStyle(color: Colors.grey[400], fontSize: 16),
                   ),
                 ],
               ),
@@ -296,7 +278,11 @@ class DetailScreen extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _buildInfoRow(Icons.calendar_today, 'Release Date', movie.releaseDate),
+              _buildInfoRow(
+                Icons.calendar_today,
+                'Release Date',
+                movie.releaseDate,
+              ),
               const Divider(color: Colors.grey, height: 24),
               _buildInfoRow(Icons.numbers, 'Movie ID', movie.id.toString()),
             ],
@@ -311,13 +297,7 @@ class DetailScreen extends StatelessWidget {
       children: [
         Icon(icon, color: Colors.grey[400], size: 18),
         const SizedBox(width: 12),
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.grey[400],
-            fontSize: 14,
-          ),
-        ),
+        Text(label, style: TextStyle(color: Colors.grey[400], fontSize: 14)),
         const Spacer(),
         Text(
           value,

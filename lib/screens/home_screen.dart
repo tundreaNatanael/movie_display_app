@@ -33,9 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _navigateToDetail(Movie movie) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => DetailScreen(movie: movie),
-      ),
+      MaterialPageRoute(builder: (context) => DetailScreen(movie: movie)),
     );
   }
 
@@ -50,9 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(width: 8),
             const Text(
               'Movie Database',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -77,16 +73,11 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(
-              color: Colors.amber,
-            ),
+            CircularProgressIndicator(color: Colors.amber),
             SizedBox(height: 16),
             Text(
               'Loading movies...',
-              style: TextStyle(
-                color: Colors.white70,
-                fontSize: 16,
-              ),
+              style: TextStyle(color: Colors.white70, fontSize: 16),
             ),
           ],
         ),
@@ -109,10 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 16),
           Text(
             'No movies found',
-            style: TextStyle(
-              color: Colors.grey[400],
-              fontSize: 18,
-            ),
+            style: TextStyle(color: Colors.grey[400], fontSize: 18),
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
@@ -142,10 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
       itemCount: _movies.length,
       itemBuilder: (context, index) {
         final movie = _movies[index];
-        return MovieCard(
-          movie: movie,
-          onTap: () => _navigateToDetail(movie),
-        );
+        return MovieCard(movie: movie, onTap: () => _navigateToDetail(movie));
       },
     );
   }

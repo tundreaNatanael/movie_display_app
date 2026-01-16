@@ -20,6 +20,7 @@ class Movie {
   });
 
   factory Movie.fromJson(Map<String, dynamic> json) {
+    // Parse API payload with safe defaults.
     return Movie(
       id: json['id'] ?? 0,
       title: json['title'] ?? 'Unknown Title',
@@ -33,6 +34,7 @@ class Movie {
   }
 
   String get fullPosterPath {
+    // Build full TMDB image URL when a path exists.
     if (posterPath.isEmpty) return '';
     return 'https://image.tmdb.org/t/p/w500$posterPath';
   }

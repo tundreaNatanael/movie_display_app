@@ -27,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _fetchMovies() async {
+    // Fetch popular movies; fall back to local data on errors/timeouts.
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -190,6 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildMovieGrid() {
     return GridView.builder(
+      // Poster grid with tap-to-detail cards.
       padding: const EdgeInsets.all(12),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,

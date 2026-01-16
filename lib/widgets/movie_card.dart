@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import '../models/movie.dart';
 
+/// A widget that displays a movie card with poster, title, overview, rating, and year.
 class MovieCard extends StatelessWidget {
+  /// The movie to display.
   final Movie movie;
+
+  /// Callback when the card is tapped.
   final VoidCallback onTap;
 
-  const MovieCard({
-    super.key,
-    required this.movie,
-    required this.onTap,
-  });
+  const MovieCard({super.key, required this.movie, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        // Card styling
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
@@ -31,14 +32,10 @@ class MovieCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Expanded(
-                flex: 4,
-                child: _buildPosterImage(),
-              ),
-              Expanded(
-                flex: 2,
-                child: _buildMovieInfo(),
-              ),
+              // Poster and image section
+              Expanded(flex: 4, child: _buildPosterImage()),
+              // The movie information section
+              Expanded(flex: 2, child: _buildMovieInfo()),
             ],
           ),
         ),
@@ -59,7 +56,7 @@ class MovieCard extends StatelessWidget {
                   child: CircularProgressIndicator(
                     value: loadingProgress.expectedTotalBytes != null
                         ? loadingProgress.cumulativeBytesLoaded /
-                            loadingProgress.expectedTotalBytes!
+                              loadingProgress.expectedTotalBytes!
                         : null,
                     color: Colors.amber,
                   ),
@@ -67,20 +64,12 @@ class MovieCard extends StatelessWidget {
               },
               errorBuilder: (context, error, stackTrace) {
                 return const Center(
-                  child: Icon(
-                    Icons.movie,
-                    size: 50,
-                    color: Colors.grey,
-                  ),
+                  child: Icon(Icons.movie, size: 50, color: Colors.grey),
                 );
               },
             )
           : const Center(
-              child: Icon(
-                Icons.movie,
-                size: 50,
-                color: Colors.grey,
-              ),
+              child: Icon(Icons.movie, size: 50, color: Colors.grey),
             ),
     );
   }
@@ -108,11 +97,7 @@ class MovieCard extends StatelessWidget {
           const SizedBox(height: 4),
           Row(
             children: [
-              const Icon(
-                Icons.star,
-                color: Colors.amber,
-                size: 14,
-              ),
+              const Icon(Icons.star, color: Colors.amber, size: 14),
               const SizedBox(width: 4),
               Text(
                 movie.voteAverage.toStringAsFixed(1),
@@ -126,10 +111,7 @@ class MovieCard extends StatelessWidget {
               if (movie.year.isNotEmpty)
                 Text(
                   movie.year,
-                  style: TextStyle(
-                    color: Colors.grey[400],
-                    fontSize: 11,
-                  ),
+                  style: TextStyle(color: Colors.grey[400], fontSize: 11),
                 ),
             ],
           ),

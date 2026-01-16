@@ -34,6 +34,7 @@ class DetailScreen extends StatelessWidget {
         background: Stack(
           fit: StackFit.expand,
           children: [
+            // Backdrop image with a fade-to-dark overlay for readability.
             _buildBackdropImage(),
             Container(
               decoration: BoxDecoration(
@@ -222,6 +223,7 @@ class DetailScreen extends StatelessWidget {
   }
 
   Widget _buildStarRating() {
+    // Convert 0-10 rating into 0-5 stars with half-star support.
     final fullStars = (movie.voteAverage / 2).floor();
     final hasHalfStar = (movie.voteAverage / 2) - fullStars >= 0.5;
 

@@ -4,10 +4,7 @@ import '../models/movie.dart';
 class DetailScreen extends StatelessWidget {
   final Movie movie;
 
-  const DetailScreen({
-    super.key,
-    required this.movie,
-  });
+  const DetailScreen({super.key, required this.movie});
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +13,7 @@ class DetailScreen extends StatelessWidget {
       body: CustomScrollView(
         slivers: [
           _buildSliverAppBar(context),
-          SliverToBoxAdapter(
-            child: _buildMovieDetails(),
-          ),
+          SliverToBoxAdapter(child: _buildMovieDetails()),
         ],
       ),
     );
@@ -34,6 +29,7 @@ class DetailScreen extends StatelessWidget {
         background: Stack(
           fit: StackFit.expand,
           children: [
+            // Backdrop image with a fade-to-dark overlay for readability.
             _buildBackdropImage(),
             Container(
               decoration: BoxDecoration(
@@ -54,44 +50,27 @@ class DetailScreen extends StatelessWidget {
   }
 
   Widget _buildBackdropImage() {
-    final imagePath = movie.fullBackdropPath.isNotEmpty
-        ? movie.fullBackdropPath
-        : movie.fullPosterPath;
+    final imagePath = movie.backdropPath.isNotEmpty
+        ? movie.backdropPath
+        : movie.posterPath;
 
     if (imagePath.isEmpty) {
       return Container(
         color: Colors.grey[800],
         child: const Center(
-          child: Icon(
-            Icons.movie,
-            size: 80,
-            color: Colors.grey,
-          ),
+          child: Icon(Icons.movie, size: 80, color: Colors.grey),
         ),
       );
     }
 
-    return Image.network(
+    return Image.asset(
       imagePath,
       fit: BoxFit.cover,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) return child;
-        return Container(
-          color: Colors.grey[800],
-          child: const Center(
-            child: CircularProgressIndicator(color: Colors.amber),
-          ),
-        );
-      },
       errorBuilder: (context, error, stackTrace) {
         return Container(
           color: Colors.grey[800],
           child: const Center(
-            child: Icon(
-              Icons.broken_image,
-              size: 80,
-              color: Colors.grey,
-            ),
+            child: Icon(Icons.broken_image, size: 80, color: Colors.grey),
           ),
         );
       },
@@ -138,16 +117,13 @@ class DetailScreen extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 4),
                   child: Text(
                     movie.year,
-                    style: TextStyle(
-                      color: Colors.grey[400],
-                      fontSize: 16,
-                    ),
+                    style: TextStyle(color: Colors.grey[400], fontSize: 16),
                   ),
                 ),
             ],
           ),
         ),
-        if (movie.fullPosterPath.isNotEmpty)
+        if (movie.posterPath.isNotEmpty)
           Container(
             width: 80,
             height: 120,
@@ -163,8 +139,8 @@ class DetailScreen extends StatelessWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                movie.fullPosterPath,
+              child: Image.asset(
+                movie.posterPath,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
@@ -205,10 +181,7 @@ class DetailScreen extends StatelessWidget {
                   ),
                   Text(
                     ' / 10',
-                    style: TextStyle(
-                      color: Colors.grey[400],
-                      fontSize: 16,
-                    ),
+                    style: TextStyle(color: Colors.grey[400], fontSize: 16),
                   ),
                 ],
               ),
@@ -222,6 +195,7 @@ class DetailScreen extends StatelessWidget {
   }
 
   Widget _buildStarRating() {
+    // Convert 0-10 rating into 0-5 stars with half-star support.
     final fullStars = (movie.voteAverage / 2).floor();
     final hasHalfStar = (movie.voteAverage / 2) - fullStars >= 0.5;
 
@@ -304,7 +278,11 @@ class DetailScreen extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _buildInfoRow(Icons.calendar_today, 'Release Date', movie.releaseDate),
+              _buildInfoRow(
+                Icons.calendar_today,
+                'Release Date',
+                movie.releaseDate,
+              ),
               const Divider(color: Colors.grey, height: 24),
               _buildInfoRow(Icons.numbers, 'Movie ID', movie.id.toString()),
             ],
@@ -319,13 +297,7 @@ class DetailScreen extends StatelessWidget {
       children: [
         Icon(icon, color: Colors.grey[400], size: 18),
         const SizedBox(width: 12),
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.grey[400],
-            fontSize: 14,
-          ),
-        ),
+        Text(label, style: TextStyle(color: Colors.grey[400], fontSize: 14)),
         const Spacer(),
         Text(
           value,

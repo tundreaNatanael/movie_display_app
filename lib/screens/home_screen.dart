@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import '../models/movie.dart';
 import '../widgets/movie_card.dart';
 import 'detail_screen.dart';
@@ -15,57 +13,27 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<Movie> _movies = [];
   bool _isLoading = true;
-  String? _errorMessage;
-
-  static const String _apiKey = '8d7d8928d2bc5c7c7c8c44d6f8f8a5e0';
-  static const String _baseUrl = 'https://api.themoviedb.org/3/movie/popular';
 
   @override
   void initState() {
     super.initState();
-    _fetchMovies();
+    _loadMovies();
   }
 
-  Future<void> _fetchMovies() async {
+  void _loadMovies() {
     setState(() {
       _isLoading = true;
-      _errorMessage = null;
     });
-
-    try {
-      final response = await http
-          .get(Uri.parse('$_baseUrl?api_key=$_apiKey'))
-          .timeout(const Duration(seconds: 10));
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final List<dynamic> results = data['results'] ?? [];
-        setState(() {
-          _movies = results.map((json) => Movie.fromJson(json)).toList();
-          _isLoading = false;
-        });
-      } else {
-        _loadHardcodedMovies('API returned status ${response.statusCode}');
-      }
-    } catch (e) {
-      _loadHardcodedMovies('Failed to fetch movies: $e');
-    }
-  }
-
-  void _loadHardcodedMovies(String reason) {
     setState(() {
       _movies = Movie.getHardcodedMovies();
       _isLoading = false;
-      _errorMessage = 'Using offline data. $reason';
     });
   }
 
   void _navigateToDetail(Movie movie) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => DetailScreen(movie: movie),
-      ),
+      MaterialPageRoute(builder: (context) => DetailScreen(movie: movie)),
     );
   }
 
@@ -80,9 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(width: 8),
             const Text(
               'Movie Database',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -92,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: _fetchMovies,
+            onPressed: _loadMovies,
             tooltip: 'Refresh',
           ),
         ],
@@ -107,52 +73,18 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(
-              color: Colors.amber,
-            ),
+            CircularProgressIndicator(color: Colors.amber),
             SizedBox(height: 16),
             Text(
               'Loading movies...',
-              style: TextStyle(
-                color: Colors.white70,
-                fontSize: 16,
-              ),
+              style: TextStyle(color: Colors.white70, fontSize: 16),
             ),
           ],
         ),
       );
     }
 
-    return Column(
-      children: [
-        if (_errorMessage != null)
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(12),
-            color: Colors.orange.withValues(alpha: 0.2),
-            child: Row(
-              children: [
-                const Icon(Icons.info_outline, color: Colors.orange, size: 20),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    _errorMessage!,
-                    style: const TextStyle(
-                      color: Colors.orange,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        Expanded(
-          child: _movies.isEmpty
-              ? _buildEmptyState()
-              : _buildMovieGrid(),
-        ),
-      ],
-    );
+    return _movies.isEmpty ? _buildEmptyState() : _buildMovieGrid();
   }
 
   Widget _buildEmptyState() {
@@ -168,14 +100,11 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 16),
           Text(
             'No movies found',
-            style: TextStyle(
-              color: Colors.grey[400],
-              fontSize: 18,
-            ),
+            style: TextStyle(color: Colors.grey[400], fontSize: 18),
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
-            onPressed: _fetchMovies,
+            onPressed: _loadMovies,
             icon: const Icon(Icons.refresh),
             label: const Text('Try Again'),
             style: ElevatedButton.styleFrom(
@@ -190,6 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildMovieGrid() {
     return GridView.builder(
+      // Poster grid with tap-to-detail cards.
       padding: const EdgeInsets.all(12),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
@@ -200,10 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
       itemCount: _movies.length,
       itemBuilder: (context, index) {
         final movie = _movies[index];
-        return MovieCard(
-          movie: movie,
-          onTap: () => _navigateToDetail(movie),
-        );
+        return MovieCard(movie: movie, onTap: () => _navigateToDetail(movie));
       },
     );
   }
